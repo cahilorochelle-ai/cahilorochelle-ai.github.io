@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For My Honey 💕</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to bottom right, #ffe6f2, #e6f7ff);
+      color: #444;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    header {
+      padding: 2rem;
+      font-size: 1.4rem;
+      color: #ff6699;
+    }
+    .hearts {
+      margin: 2rem;
+    }
+    .heart {
+      display: inline-block;
+      font-size: 2rem;
+      cursor: pointer;
+      margin: 0.5rem;
+      transition: transform 0.2s;
+    }
+    .heart:hover {
+      transform: scale(1.3);
+    }
+    #messageBox {
+      margin: 1.5rem auto;
+      padding: 1rem;
+      width: 80%;
+      max-width: 500px;
+      background: #fff0f5;
+      border-radius: 15px;
+      font-size: 1.1rem;
+      display: none;
+    }
+    .game {
+      margin: 2rem auto;
+      width: 200px;
+      height: 200px;
+      background: #fffaf0;
+      border: 3px dashed #ff99cc;
+      border-radius: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: background 0.3s;
+      user-select: none;
+    }
+    .game:hover {
+      background: #ffe6f2;
+    }
+    footer {
+      margin: 2rem;
+      padding: 1.5rem;
+      background: #fff0f5;
+      border-radius: 15px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+      line-height: 1.6;
+    }
+    audio {
+      margin: 1rem;
+    }
+    /* Gecko Sticker */
+    .gecko {
+      position: fixed;
+      bottom: 15px;
+      right: 15px;
+      font-size: 3rem;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .gecko:hover {
+      transform: rotate(15deg) scale(1.2);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <p><em>Hi honey 💕 I made this little space just for you. Even if we're far apart, I want you to feel how close you are to my heart.</em></p>
+  </header>
+
+<!-- 🎶 Music Player (autoplay + loop for effect) -->
+<audio id="bgMusic" controls autoplay loop>
+  <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
+  Your browser does not support audio.
+</audio>
+<p><em>"Every note reminds me of you, honey 💕"</em></p>
+
+  <!-- 💖 Interactive Hearts -->
+  <section class="hearts">
+    <div class="heart" onclick="showMessage('You make my days brighter 🌸')">❤️</div>
+    <div class="heart" onclick="showMessage('I love how we play Roblox together 🎮')">💖</div>
+    <div class="heart" onclick="showMessage('You are my safe space 💕')">💘</div>
+    <div class="heart" onclick="showMessage('One day, no more distance 🌍')">💞</div>
+    <div class="heart" onclick="showMessage('I choose you, always 🌷')">💓</div>
+  </section>
+
+  <div id="messageBox"></div>
+
+  <!-- 🎮 Mini Game (simple click-to-collect hearts) -->
+  <div class="game" onclick="playGame()">Collect Love 💝</div>
+  <p id="gameResult"></p>
+
+  <!-- 💌 Love Letter -->
+  <footer>
+    <h2>💌 My Love Letter for You 💌</h2>
+    <p><strong>My honey,</strong><br>
+    Even with the distance between us, I feel you so close to my heart. Every message from you, every time we play games, every quiet moment we share, it means more to me than I could ever say. Loving you, even from far away, has become one of the sweetest parts of my life.</p>
+    <p>We've already opened our hearts to each other, and that means everything to me. But I don't want to rush anything. I want to take my time with you, to love you gently, to learn you slowly, and to let this grow into something lasting and beautiful.</p>
+    <p>I want to court you, not just for now, but for always. Even from miles apart, I want to show you that I'm here for you, that I'm serious about you, and that you matter to me in every way. I want to know your little quirks, your habits, your stories, all the things that make you you. I want to make you smile, feel safe, and feel deeply loved, even when I can't be right there beside you.</p>
+    <p>I dream of the day we don't have to count the distance anymore. But until then, I'll keep choosing you. I'll stay by your side in every way I can, with patience, care, and all the love in my heart.</p>
+    <p><strong>I love you so much.</strong></p>
+  </footer>
+
+  <!-- Gecko Sticker -->
+  <div class="gecko" title="Your little gecko watching over us 🦎">🦎</div>
+
+  <script>
+    function showMessage(message) {
+      const box = document.getElementById('messageBox');
+      box.innerText = message;
+      box.style.display = 'block';
+    }
+
+    let score = 0;
+    function playGame() {
+      score++;
+      const rewards = ["a hug 🤗", "a kiss 😘", "a flower 🌸", "my heart ❤️", "a smile 😊"];
+      const reward = rewards[Math.floor(Math.random() * rewards.length)];
+      document.getElementById('gameResult').innerText = `You collected ${score} love points! Reward: ${reward}`;
+    }
+  </script>
+</body>
+</html>
