@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love Quiz 💖</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body {
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background: linear-gradient(180deg,#fff0f2,#ffd6e0);
+  color:#6b4060;
+  text-align:center;
+  overflow-x:hidden;
+  position:relative;
+  min-height:100vh;
+}
+.wrap{max-width:760px;margin:0 auto;padding:22px;}
+h1,h2,h3{margin:12px 0;}
+.card{
+  background:#fff;
+  border-radius:16px;
+  padding:20px;
+  margin:20px 0;
+  box-shadow:0 8px 30px rgba(179,0,89,0.08);
+  position:relative;
+  overflow:hidden;
+}
+button{
+  padding:14px 22px;
+  border-radius:16px;
+  border:0;
+  background:linear-gradient(90deg,#ff4d79,#ff7b9a);
+  color:white;
+  font-weight:700;
+  font-size:16px;
+  cursor:pointer;
+  margin:8px;
+  min-width:120px;
+  transition: transform 0.2s;
+  position:relative;
+}
+button:active{transform:scale(0.96);}
+.choice{
+  display:block;
+  padding:14px;
+  border-radius:16px;
+  margin:8px;
+  cursor:pointer;
+  background:#fff0f2;
+  font-size:16px;
+  transition:0.2s;
+}
+.choice:hover{transform:scale(1.03);}
+.petal{
+  position:fixed;
+  top:-10vh;
+  font-size:22px;
+  opacity:0.9;
+  pointer-events:none;
+  animation:petalFall linear infinite;
+}
+@keyframes petalFall{
+  to{transform: translateY(120vh) rotate(360deg); opacity:0;}
+}
+.letter{font-size:16px; line-height:1.7; color:#5b3a4d; text-align:left; white-space:pre-wrap; min-height:200px;}
+.proposal{margin-top:20px; display:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" id="introCard">
+    <h1 style="font-family:'Great Vibes',cursive;">For My Honey 💖</h1>
+    <p>Hi my honey! Take this little quiz and enjoy a special love letter at the end 💌</p>
+    <button id="startBtn">Start Quiz</button>
+  </div>
+
+  <div class="card" id="quizArea" style="display:none;">
+    <h2 id="questionText"></h2>
+    <p id="hintText" style="font-size:14px;"></p>
+    <div id="choicesWrap"></div>
+    <p id="responseText" style="min-height:50px;"></p>
+    <button id="nextBtn" style="display:none;">Next ➡️</button>
+  </div>
+
+  <div class="card" id="letterArea" style="display:none;">
+    <div class="letter"></div>
+    <button id="showProposalBtn" style="display:none;margin-top:20px;">Read the Surprise 💖</button>
+  </div>
+
+  <div class="card" id="proposalArea" style="display:none;">
+    <h3>Will you be my girlfriend, and my future? 💖</h3>
+    <button id="yesBtn">Yes</button>
+    <span style="margin:0 10px;font-weight:700;">or</span>
+    <button id="yesBtn2">Yes</button>
+  </div>
+
+  <div class="card" id="finalArea" style="display:none;">
+    <div style="font-size:46px;">😳😻</div>
+    <p>Ohhh myy goshhh she said yesss!!! I'm blushing and can't stop smiling — I'm so lucky to have you, my honey 💖</p>
+  </div>
+</div>
+
+<audio id="bgMusic" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2023/07/28/audio_1ab71a9c31.mp3?filename=romantic-piano-14799.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+// Petals
+for(let i=0;i<25;i++){
+  const petal=document.createElement('div');
+  petal.className='petal';
+  petal.style.left=Math.random()*100+'vw';
+  petal.style.fontSize=(12+Math.random()*24)+'px';
+  petal.style.animationDuration=(8+Math.random()*6)+'s';
+  petal.textContent='🌸';
+  document.body.appendChild(petal);
+}
+
+const questions=[
+  { q:"What's cuter, gecko or frog?", hint:"Pick your champion 🦎🐸", choices:[
+    {id:'gecko',label:'Gecko',response:"I agree geckos are cute! 💕"},
+    {id:'frog',label:'Frog',response:"Eeehhhh, not cute at all. 😅"}
+  ]},
+  { q:"Do you love geckos?", hint:"Answer honestly 🦎", choices:[
+    {id:'yes',label:'Yes',response:"Woww that's nice honey, I love gecko too! 💖"},
+    {id:'no',label:'No',response:"But they're cutee, frogs not 😢", trick:true}
+  ]},
+  { q:"Do you love me?", hint:"If you choose no honey, I'll cry 🥺", choices:[
+    {id:'yes',label:'Yes',response:"Yeyeyeyey, I lovee youuu more, my honeyy 😽"},
+    {id:'no',label:'No',response:"Cryy 😭 Whyyyy?", trick:true}
+  ]}
+];
+
+let idx=0,noTries=0;
+const startBtn=document.getElementById('startBtn');
+const introCard=document.getElementById('introCard');
+const quizArea=document.getElementById('quizArea');
+const questionText=document.getElementById('questionText');
+const hintText=document.getElementById('hintText');
+const choicesWrap=document.getElementById('choicesWrap');
+const responseText=document.getElementById('responseText');
+const nextBtn=document.getElementById('nextBtn');
+const letterArea=document.getElementById('letterArea');
+const letterDiv=document.querySelector('.letter');
+const showProposalBtn=document.getElementById('showProposalBtn');
+const proposalArea=document.getElementById('proposalArea');
+const yesBtn=document.getElementById('yesBtn');
+const yesBtn2=document.getElementById('yesBtn2');
+const finalArea=document.getElementById('finalArea');
+const bgMusic=document.getElementById('bgMusic');
+
+startBtn.addEventListener('click',()=>{
+  introCard.style.display='none';
+  quizArea.style.display='block';
+  bgMusic.volume=0.5;
+  bgMusic.play().catch(()=>{});
+  showQuestion();
+});
+
+function showQuestion(){
+  nextBtn.style.display='none';
+  responseText.textContent='';
+  const q=questions[idx];
+  questionText.textContent=q.q;
+  hintText.textContent=q.hint;
+  choicesWrap.innerHTML='';
+  q.choices.forEach(c=>{
+    const btn=document.createElement('button');
+    btn.textContent=c.label;
+    btn.style.position='relative';
+    btn.onclick=()=>{
+      if(c.trick && noTries<3){
+        noTries++;
+        // Move button randomly but stay inside card
+        const maxX = choicesWrap.clientWidth - btn.offsetWidth;
+        const maxY = 150;
+        const randomX = Math.random() * maxX;
+        const randomY = Math.random() * maxY;
+        btn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        responseText.textContent="Noooo? this button is shy… try again 😅";
+        return;
+      }
+      responseText.textContent=c.response;
+      nextBtn.style.display='inline-block';
+    };
+    choicesWrap.appendChild(btn);
+  });
+}
+
+nextBtn.addEventListener('click',()=>{
+  idx++;
+  noTries=0;
+  if(idx<questions.length){
+    showQuestion();
+  }else{
+    quizArea.style.display='none';
+    showLetter();
+  }
+});
+
+function showLetter(){
+  letterArea.style.display='block';
+  const letterText=`My honey 💖,
+
+I hope you are having a wonderful day. I just want to tell you how much you mean to me. Every time we talk and laugh together, my heart feels warmer. I love getting to know you, learning your favorite things, the way you smile, and even our silly jokes.
+
+Our late night calls are my favorite — hearing your voice makes me so happy. I love our playful moments and the little things we do together. Every moment with you is precious to me.
+
+You are amazing, my honey, and I feel lucky to have met you. I want to be there for you, to make you smile, and to hold your hand through everything life brings.`;
+
+  letterDiv.textContent='';
+  let i=0;
+  const interval=setInterval(()=>{
+    if(i<letterText.length){
+      letterDiv.textContent += letterText[i];
+      i++;
+    } else {
+      clearInterval(interval);
+      showProposalBtn.style.display='inline-block';
+    }
+  },25);
+}
+
+showProposalBtn.addEventListener('click',()=>{
+  letterArea.style.display='none';
+  proposalArea.style.display='block';
+});
+
+yesBtn.addEventListener('click',()=>{
+  proposalArea.style.display='none';
+  finalArea.style.display='block';
+});
+yesBtn2.addEventListener('click',()=>{
+  proposalArea.style.display='none';
+  finalArea.style.display='block';
+});
+});
+</script>
+</body>
+</html>
